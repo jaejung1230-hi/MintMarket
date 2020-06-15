@@ -54,6 +54,7 @@ class ItemlistFragment : Fragment() {
         //val items = (requireContext() as Main2Activity).itemRepository
 
         view?.let{
+
             it.message_rv.adapter = ItemAdapter(datas)
             it.message_rv.layoutManager = LinearLayoutManager(requireContext())
         }
@@ -62,33 +63,23 @@ class ItemlistFragment : Fragment() {
             requireActivity().findNavController(R.id.nav_host_fragment)
         )
     }
-
-    private fun initStorage() {
-
+    private fun initStorage(){
         firebasedb = FirebaseDatabase.getInstance()
-
 
         firebasedb!!.reference.child("info").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
 
                 datas.clear()
                 for(data in p0.children ){
-                        val msg = data.getValue(ShowFirebaseDataOnList::class.java)
 
-                        msg?.let { datas.add(it) }
+                    val msg = data.getValue(ShowFirebaseDataOnList::class.java)
+                    msg?.let { datas.add(it) }
 
                 }
-
             }
-
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("check", "failed to get database data")
             }
-        })
-        //Log.d("check", datas.getValue("price"))
-        val fileName = "1587020415.jpg"
-        storageRef!!.child(fileName).downloadUrl.addOnSuccessListener(OnSuccessListener {url ->
-
         })
     }
 }

@@ -59,8 +59,8 @@ class StuffRegistrationActivity : AppCompatActivity() {
                 val stuffInfo: StuffInfo = StuffInfo(
                     stuff_image.getDrawable() as String,
                     title_edit.getText().toString(),
-                    start_cost_edit.getText().toString().toInt(),
-                    jump_cost_edit.getText().toString().toInt(),
+                    start_cost_edit.getText().toString(),
+                    jump_cost_edit.getText().toString(),
                     period_spinner.getSelectedItem().toString(),
                     category_spinner.getSelectedItem().toString(),
                     detail_info_edit.getText().toString()

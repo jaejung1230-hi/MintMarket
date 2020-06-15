@@ -5,16 +5,18 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 class ShowFirebaseDataOnList{
-    var imagePath : String? = null
+    var imgRes : String? = null
     var title : String? = null
     var price : String? = null
     var upprice : String? = null
+    var period: String? = null
     constructor(){}
 
-    constructor(imagePath : String, title : String, price:String,upprice:String){
-        this.imagePath = imagePath
+    constructor(imgRes : String, title : String, price:String, upprice:String, period: String){
+        this.imgRes = imgRes
         this.title = title
         this.price = price
         this.upprice = upprice
+        this.period = period
     }
 }

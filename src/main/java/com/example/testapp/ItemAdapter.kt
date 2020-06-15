@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide.get
 import com.squareup.picasso.Picasso
+import io.grpc.okhttp.internal.Platform.get
+import kotlinx.android.synthetic.main.fragment_add.view.*
 import kotlinx.android.synthetic.main.item_list.view.*
 
 class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.Adapter<ItemAdapter.ViewHolder>(){
@@ -27,12 +30,11 @@ class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.A
         fun bindItem(items: ShowFirebaseDataOnList){
             Log.d("check", "$items")
             item.name_tv.text = items.title
-            item.price_tv.text = items.price.toString()
-            item.upprice_tv.text ="상승가: " + items.upprice.toString()
-           // item.preiod_tv.text = items.period
-            //item.preiod_tv.text = items.category
-            //item.img_res.setImageResource(items.imgRes)
-            Picasso.with(item.context).load(items.imagePath).into(item.img_res)
+            item.price_tv.text = items.price
+            item.upprice_tv.text ="상승가: " + items.upprice
+            item.preiod_tv.text = items.period
+            Picasso.with(item.context).load(items.imgRes).into(item.img_res)
+
 
 /*
             item.setOnClickListener{
