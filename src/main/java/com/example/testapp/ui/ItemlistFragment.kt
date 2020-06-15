@@ -48,7 +48,7 @@ class ItemlistFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         databaseRef= FirebaseDatabase.getInstance().reference
-        storageRef = FirebaseStorage.getInstance().getReference("uploads")
+        storageRef = FirebaseStorage.getInstance().getReference("images")
 
         initStorage()
         //val items = (requireContext() as Main2Activity).itemRepository
@@ -68,7 +68,7 @@ class ItemlistFragment : Fragment() {
         firebasedb = FirebaseDatabase.getInstance()
 
 
-        firebasedb!!.reference.child("a").addValueEventListener(object : ValueEventListener{
+        firebasedb!!.reference.child("info").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
 
                 datas.clear()

@@ -1,5 +1,6 @@
 package com.example.testapp
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,19 +18,21 @@ class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         holder.bindItem(items[position])
     }
 
 
     inner class ViewHolder(val item: View) : RecyclerView.ViewHolder(item) {
         fun bindItem(items: ShowFirebaseDataOnList){
+            Log.d("check", "$items")
             item.name_tv.text = items.title
             item.price_tv.text = items.price.toString()
             item.upprice_tv.text ="상승가: " + items.upprice.toString()
            // item.preiod_tv.text = items.period
             //item.preiod_tv.text = items.category
             //item.img_res.setImageResource(items.imgRes)
-            //Picasso.with(item.context).load(items.imgRes).into(item.img_res)
+            Picasso.with(item.context).load(items.imagePath).into(item.img_res)
 
 /*
             item.setOnClickListener{
