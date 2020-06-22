@@ -8,16 +8,37 @@
         android:id="@+id/itemlistFragment"
         android:name="com.example.testapp.ui.ItemlistFragment"
         android:label="fragment_itemlist"
-        tools:layout="@layout/fragment_itemlist" />
+        tools:layout="@layout/fragment_itemlist" >
+        <action
+            android:id="@+id/action_itemlistFragment_pop"
+            app:popUpTo="@id/itemlistFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_itemlistFragment_to_listDetailFragment"
+            app:destination="@id/listDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addFragment"
         android:name="com.example.testapp.ui.AddFragment"
         android:label="fragment_add"
-        tools:layout="@layout/fragment_add" >
-        <action
-            android:id="@+id/action_addFragment_to_itemlistFragment"
-            app:destination="@id/itemlistFragment"
-            app:popUpTo="@id/itemlistFragment"
-            app:popUpToInclusive="true" />
+        tools:layout="@layout/fragment_add" />
+    <fragment
+        android:id="@+id/myListFragment"
+        android:name="com.example.testapp.ui.MyListFragment"
+        android:label="my_list_fragment"
+        tools:layout="@layout/my_list_fragment" />
+    <fragment
+        android:id="@+id/myInfoFragment"
+        android:name="com.example.testapp.ui.MyInfoFragment"
+        android:label="fragment_my_info"
+        tools:layout="@layout/fragment_my_info" />
+    <fragment
+        android:id="@+id/listDetailFragment"
+        android:name="com.example.testapp.ui.ListDetailFragment"
+        android:label="fragment_list_detail"
+        tools:layout="@layout/fragment_list_detail" >
+        <argument
+            android:name="idx"
+            app:argType="integer" />
     </fragment>
 </navigation>

@@ -25,6 +25,8 @@ import org.w3c.dom.Comment
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URI
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
@@ -34,14 +36,16 @@ class ItemlistFragment : Fragment() {
     private var firebasedb : FirebaseDatabase? = null
     private var databaseRef: DatabaseReference? = null
     private var storageRef : StorageReference? = null
-    private var itemArrayList = ArrayList<StuffInfo>()
-    private var datas = ArrayList<ShowFirebaseDataOnList>()
+    companion object {
+        var datas = ArrayList<ShowFirebaseDataOnList>()
+    }
     //private var itemRepository = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
+        initStorage()
         return inflater.inflate(R.layout.fragment_itemlist, container, false)
     }
 
@@ -50,10 +54,12 @@ class ItemlistFragment : Fragment() {
         databaseRef= FirebaseDatabase.getInstance().reference
         storageRef = FirebaseStorage.getInstance().getReference("images")
 
-        initStorage()
+
         //val items = (requireContext() as Main2Activity).itemRepository
 
         view?.let{
+
+
 
             it.message_rv.adapter = ItemAdapter(datas)
             it.message_rv.layoutManager = LinearLayoutManager(requireContext())
@@ -71,7 +77,7 @@ class ItemlistFragment : Fragment() {
 
                 datas.clear()
                 for(data in p0.children ){
-
+                    //Log.d("check", "data : ${data}")
                     val msg = data.getValue(ShowFirebaseDataOnList::class.java)
                     msg?.let { datas.add(it) }
 

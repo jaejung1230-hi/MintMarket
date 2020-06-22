@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.actions.ItemListIntents
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -21,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private var mAuth: FirebaseAuth? = null
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private var RC_SIGN_IN = 9001
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +65,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
         Log.d("check","firebaseAuthWithGoogle")
+        Log.d("check", "mAuth : $mAuth")
         val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
         mAuth!!.signInWithCredential(credential).addOnCompleteListener() { task ->
                 if (task.isSuccessful) {
@@ -78,6 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun updateUI(user: FirebaseUser?) { //update ui code here
         if (user != null) {
+
             val intent = Intent(this, Main2Activity::class.java)
             intent.putExtra("user", user)
             startActivity(intent)

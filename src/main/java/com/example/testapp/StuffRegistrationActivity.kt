@@ -63,7 +63,9 @@ class StuffRegistrationActivity : AppCompatActivity() {
                     jump_cost_edit.getText().toString(),
                     period_spinner.getSelectedItem().toString(),
                     category_spinner.getSelectedItem().toString(),
-                    detail_info_edit.getText().toString()
+                    detail_info_edit.getText().toString(),
+                    uid = "",
+                    maxPrice = ""
                 )/*
                 Log.d("stuffInfo", stuffInfo.imgRes.toString())
                 Log.d("stuffInfo", R.drawable.noimage.toString())
