@@ -11,6 +11,7 @@ import com.example.testapp.Main2Activity
 import com.example.testapp.R
 import com.example.testapp.ShowFirebaseDataOnList
 import com.example.testapp.detailDataList
+import com.example.testapp.ui.ItemlistFragment.Companion.datas
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_list_detail.*
@@ -23,13 +24,16 @@ class ListDetailFragment : Fragment() {
     val loginuser = Main2Activity.loginuser.uid
     private var firebasedb : FirebaseDatabase? = null
     private var databaseRef: DatabaseReference? = null
-    var datas = ArrayList<detailDataList>()
+    var detailDatas = ArrayList<detailDataList>()
     private var myInt : HashMap<String?, String?>? =null
-    var enrollerUid : String= ""
-    var maxPrice = AddFragment.maxPrice
+    var enrollerUid : String?= null
+    var maxPrice : String? = null
     private lateinit var databaseReference: DatabaseReference
     var participateNumber : String? = null //입찰 참가자 숫자
-
+    var ispushed = true
+    companion object{
+        var CurMaxPrice :String? = null
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,7 +46,7 @@ class ListDetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        firebasedb = FirebaseDatabase.getInstance()
+
         databaseReference = FirebaseDatabase.getInstance().reference
 
         //val item = activity?.intent?.getStringExtra("items")
@@ -57,36 +61,40 @@ class ListDetailFragment : Fragment() {
             category_tv.text = myInt?.getValue("category").toString()
             up_price_tv.text = "(상승단위 : " + myInt?.getValue("upprice").toString() +"원)"
         }
-
-        getUserId()
-        Log.d("check", "$loginuser & $enrollerUid")
+        if(!ispushed) {
+            getUserId()
+        }else{
+            getUserIdwithfixed()
+        }
         participate_btn.setOnClickListener {
             if(loginuser == enrollerUid) {
                 Toast.makeText(requireContext(), "등록자는 입찰할수 없습니다.", Toast.LENGTH_LONG).show()
             }else{
-                val finalMaxPrice = Integer.parseInt(myInt?.getValue("upprice").toString())+Integer.parseInt(maxPrice!!)
-                val finalParticipantNum = Integer.parseInt(participateNumber!!)+1
-                val result = detailDataList(finalParticipantNum.toString(), loginuser,finalMaxPrice.toString())
+                Log.d("check", "$loginuser & $enrollerUid")
+                CurMaxPrice = (Integer.parseInt(myInt?.getValue("upprice").toString())+ Integer.parseInt(maxPrice!!)).toString()
+                val CurParticipantNum = Integer.parseInt(participateNumber!!)+1
+                val participateItemResult = detailDataList(CurParticipantNum.toString(), CurMaxPrice, enrollerUid)
 
-                databaseReference.child("enroller").child(myInt?.getValue("title").toString()).setValue(result)
+                databaseReference.child("enroller").child(myInt?.getValue("title").toString()).setValue(participateItemResult)
 
 
             }
         }
     }
 
-    private fun getUserId(){
-        firebasedb!!.reference.child("enroller").child(myInt?.getValue("title").toString()).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(p0: DataSnapshot) {
-                for(data in p0.children ){
-                    val msg = data.getValue(detailDataList::class.java)
-                    msg?.let { datas.add(it) }
-                    for(data in datas){
-                        enrollerUid = data.uid.toString()
-                        participateNumber = data.count.toString()
-                        //Log.d("check", "enrollerUid : ${enrollerUid}")
-                    }
-                }
+    //덮혀씌우면 랜덤 트리 네임이 사라져서 따로 없는 것을 가져오는 코드
+    private fun getUserIdwithfixed() {
+        firebasedb = FirebaseDatabase.getInstance()
+        val itemTitle = myInt?.getValue("title").toString()
+        firebasedb!!.reference.child("enroller").child(itemTitle).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                enrollerUid = dataSnapshot.child("enrolleruid").getValue(String::class.java)
+                participateNumber = dataSnapshot.child("count").getValue(String::class.java)
+                maxPrice = dataSnapshot.child("maxprice").getValue(String::class.java)
+                val result = detailDataList(participateNumber, maxPrice, enrollerUid)
+                Log.d("check", "result $result")
+
 
             }
 
@@ -94,7 +102,29 @@ class ListDetailFragment : Fragment() {
                 Log.d("check", "failed to get database data")
             }
         })
-
     }
+    //랜덤 트리 있을때 가져오는곳
+    private fun getUserId(){
+        firebasedb = FirebaseDatabase.getInstance()
+        val itemTitle = myInt?.getValue("title").toString()
+        firebasedb!!.reference.child("enroller").child(itemTitle).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for(p0 in dataSnapshot.children) {
+                    enrollerUid = p0.child("enrolleruid").getValue(String::class.java)
+                    participateNumber = p0.child("count").getValue(String::class.java)
+                    maxPrice = p0.child("maxprice").getValue(String::class.java)
+                    val result = detailDataList(participateNumber, maxPrice, enrollerUid)
+                    Log.d("check", "result $result")
+
+                }
+            }
+
+            override fun onCancelled(p0: DatabaseError) {
+                Log.d("check", "failed to get database data")
+            }
+        })
+        ispushed = false
+    }
+
 
 }

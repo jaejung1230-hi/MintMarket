@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_add.view.*
 import kotlinx.android.synthetic.main.item_list.view.*
 
 class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.Adapter<ItemAdapter.ViewHolder>(){
-
+    val CurMaxPriceFromDetailFrament = ListDetailFragment.CurMaxPrice
     val data = HashMap<String?, String?>()
     override fun getItemCount() = items.size
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,7 +36,6 @@ class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.A
 
     inner class ViewHolder(val item: View) : RecyclerView.ViewHolder(item) {
         fun bindItem(items: ShowFirebaseDataOnList){
-            Log.d("check", "ItemAdapter items : $items")
             item.name_tv.text = items.title
             //item.price_tv.text = items.price
             //item.upprice_tv.text ="상승가: " + items.upprice
@@ -53,7 +52,7 @@ class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.A
                 data["maxprice"] = items.maxPrice
                 data["detailinfo"] = items.detailinfo
                 data["category"] = items.category
-                data["uid"] = items.uid
+                data["loginuid"] = items.loginuid
 
 
 

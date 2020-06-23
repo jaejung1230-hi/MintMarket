@@ -118,6 +118,7 @@ open class AddFragment : Fragment() {
         val itemCategory:String = categorys_spinner?.selectedItem.toString()
         val itemDetailInfo:String = detailinfo_edit?.text.toString()
         maxPrice = itemPrice
+        Log.d("check", "addFragment maxPrice : $maxPrice")
         val file: Uri = Uri.fromFile(File(uri))
 
         val riversRef = storageRef?.child("images/" + "${file.lastPathSegment}")
@@ -137,7 +138,7 @@ open class AddFragment : Fragment() {
                         url, itemName, itemPrice, itemUpPrice,
                         itemPeriod, itemCategory, itemDetailInfo, loginuser, maxPrice!!
                     )
-                    val tmp = detailDataList("1",loginuser,maxPrice!!)
+                    val tmp = detailDataList("1", maxPrice!! , loginuser)
 
                     //val enroll = detailDataList(loginuser)
                     databaseReference.child("info").push().setValue(result)

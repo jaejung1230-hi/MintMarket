@@ -64,7 +64,7 @@ class StuffRegistrationActivity : AppCompatActivity() {
                     period_spinner.getSelectedItem().toString(),
                     category_spinner.getSelectedItem().toString(),
                     detail_info_edit.getText().toString(),
-                    uid = "",
+                    loginuid = "",
                     maxPrice = ""
                 )/*
                 Log.d("stuffInfo", stuffInfo.imgRes.toString())
