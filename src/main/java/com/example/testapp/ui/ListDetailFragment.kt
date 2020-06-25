@@ -61,11 +61,9 @@ class ListDetailFragment : Fragment() {
             category_tv.text = myInt?.getValue("category").toString()
             up_price_tv.text = "(상승단위 : " + myInt?.getValue("upprice").toString() +"원)"
         }
-        if(!ispushed) {
-            getUserId()
-        }else{
-            getUserIdwithfixed()
-        }
+
+        getUserIdwithfixed()
+
         participate_btn.setOnClickListener {
             if(loginuser == enrollerUid) {
                 Toast.makeText(requireContext(), "등록자는 입찰할수 없습니다.", Toast.LENGTH_LONG).show()
@@ -82,7 +80,6 @@ class ListDetailFragment : Fragment() {
         }
     }
 
-    //덮혀씌우면 랜덤 트리 네임이 사라져서 따로 없는 것을 가져오는 코드
     private fun getUserIdwithfixed() {
         firebasedb = FirebaseDatabase.getInstance()
         val itemTitle = myInt?.getValue("title").toString()
@@ -102,28 +99,6 @@ class ListDetailFragment : Fragment() {
                 Log.d("check", "failed to get database data")
             }
         })
-    }
-    //랜덤 트리 있을때 가져오는곳
-    private fun getUserId(){
-        firebasedb = FirebaseDatabase.getInstance()
-        val itemTitle = myInt?.getValue("title").toString()
-        firebasedb!!.reference.child("enroller").child(itemTitle).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for(p0 in dataSnapshot.children) {
-                    enrollerUid = p0.child("enrolleruid").getValue(String::class.java)
-                    participateNumber = p0.child("count").getValue(String::class.java)
-                    maxPrice = p0.child("maxprice").getValue(String::class.java)
-                    val result = detailDataList(participateNumber, maxPrice, enrollerUid)
-                    Log.d("check", "result $result")
-
-                }
-            }
-
-            override fun onCancelled(p0: DatabaseError) {
-                Log.d("check", "failed to get database data")
-            }
-        })
-        ispushed = false
     }
 
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide.get
 import com.example.testapp.ui.ItemlistFragment
@@ -19,7 +20,6 @@ import kotlinx.android.synthetic.main.fragment_add.view.*
 import kotlinx.android.synthetic.main.item_list.view.*
 
 class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.Adapter<ItemAdapter.ViewHolder>(){
-    val CurMaxPriceFromDetailFrament = ListDetailFragment.CurMaxPrice
     val data = HashMap<String?, String?>()
     override fun getItemCount() = items.size
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,17 +31,26 @@ class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.A
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.bindItem(items[position])
+
+    }
+
+    fun setData(newItems: ArrayList<ShowFirebaseDataOnList>){
+        val diffCallback = DiffCallback(items, newItems)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        items.clear()
+        items.addAll(newItems)
+        diffResult.dispatchUpdatesTo(this)
     }
 
 
     inner class ViewHolder(val item: View) : RecyclerView.ViewHolder(item) {
+
         fun bindItem(items: ShowFirebaseDataOnList){
             item.name_tv.text = items.title
-            //item.price_tv.text = items.price
-            //item.upprice_tv.text ="상승가: " + items.upprice
             item.preiod_tv.text = items.period
             item.maxprice_tv.text = "최고가: " + items.maxPrice + "원"
             Picasso.with(item.context).load(items.imgRes).resize(100,100).into(item.img_res)
+
 
 
             item.setOnClickListener{
@@ -64,4 +73,5 @@ class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.A
 
         }
     }
+
 }
