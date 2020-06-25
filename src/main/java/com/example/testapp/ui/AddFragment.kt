@@ -92,9 +92,12 @@ open class AddFragment : Fragment() {
     @SuppressLint("SimpleDateFormat")
     private fun upload (uri : String?) {
         //날짜 계산
+        var tz: TimeZone
         val cal = Calendar.getInstance()
         cal.time = Date()
-        val df : DateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val df : DateFormat = SimpleDateFormat("yyyy-MM-dd/HH:mm:ss")
+        tz = TimeZone.getTimeZone("Asia/Seoul")
+        df.setTimeZone(tz)
         when (period_spinner.selectedItem) {
             "1일" -> {
                 cal.add(Calendar.DATE, 1)
@@ -106,15 +109,13 @@ open class AddFragment : Fragment() {
                 cal.add(Calendar.DATE, 3)
             }
         }
-
-
         val storageRef : StorageReference? = storage?.getReferenceFromUrl("gs://test-3578b.appspot.com")
 
 
         val itemPrice : String = start_cost_edit?.text.toString()
         val itemName :String = title_edit?.text.toString()
         val itemUpPrice: String = jump_cost_edit?.text.toString()
-        val itemPeriod:String = "입찰기간 : "+df.format(cal.time).toString()
+        val itemPeriod:String = "입찰만료날짜 : "+df.format(cal.time).toString()
         val itemCategory:String = categorys_spinner?.selectedItem.toString()
         val itemDetailInfo:String = detailinfo_edit?.text.toString()
         maxPrice = itemPrice
@@ -141,8 +142,8 @@ open class AddFragment : Fragment() {
                     val tmp = detailDataList("1", maxPrice!! , loginuser)
 
                     //val enroll = detailDataList(loginuser)
-                    databaseReference.child("info").push().setValue(result)
-                    databaseReference.child("enroller").child(itemName).push().setValue(tmp)
+                    databaseReference.child("info").child("$loginuser/$itemName").setValue(result)
+                    databaseReference.child("enroller").child(itemName).setValue(tmp)
 
                 }
 

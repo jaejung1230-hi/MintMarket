@@ -74,13 +74,16 @@ class ItemlistFragment : Fragment() {
 
         firebasedb!!.reference.child("info").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
-
+                //Log.d("check", "itemlistFragment p0 ${p0}")
                 datas.clear()
                 for(data in p0.children ){
-                    //Log.d("check", "data : ${data}")
-                    val msg = data.getValue(ShowFirebaseDataOnList::class.java)
-                    msg?.let { datas.add(it) }
+                    for(itemData in data.children){
 
+                        //Log.d("check", "itemData : ${itemData}")
+                        val msg = itemData.getValue(ShowFirebaseDataOnList::class.java)
+                        msg?.let { datas.add(it) }
+
+                    }
                 }
             }
             override fun onCancelled(p0: DatabaseError) {
