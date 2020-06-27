@@ -136,17 +136,18 @@ open class AddFragment : Fragment() {
                         url, itemName, itemPrice, itemUpPrice,
                         itemPeriod, itemCategory, itemDetailInfo, loginuser, maxPrice!!
                     )
-                    val tmp = detailDataList(
+                    val whoisupload = detailDataList(
                         "0",
                         maxPrice!!,
                         loginuser,
                         url,
-                        itemPeriod
+                        itemPeriod,
+                        itemName
                     )
 
                     //val enroll = detailDataList(loginuser)
                     databaseReference.child("info").child("$loginuser/$itemName").setValue(result)
-                    databaseReference.child("enroller").child(itemName).setValue(tmp)
+                    databaseReference.child("WhoUploadItem").child(itemName).setValue(whoisupload)
 
                 }
 

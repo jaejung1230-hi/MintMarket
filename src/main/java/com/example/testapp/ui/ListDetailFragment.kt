@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.testapp.activity.Main2Activity
 import com.example.testapp.R
-import com.example.testapp.dataclass.ShowFirebaseDataOnList
+import com.example.testapp.dataclass.MyParticipateItemList
 import com.example.testapp.dataclass.detailDataList
 import com.example.testapp.dataclass.participantsCheck
-import com.example.testapp.moneyFormatToWon
+import com.example.testapp.util.moneyFormatToWon
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_list_detail.*
@@ -31,9 +31,9 @@ class ListDetailFragment : Fragment() {
     private var CurMaxPrice :String? = null
 
     var checkInvoleInItem : String? = null
-    private var IsAlreadyIn : Boolean = true
-    private var curParticipantNum : Int = 0
+    private var IsAlreadyIn : Boolean = false
 
+    var curParticipantNum : Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,8 +55,12 @@ class ListDetailFragment : Fragment() {
         if (bundle != null) {
             myInt  = bundle.getSerializable("items") as HashMap<String?, String?>
 
-            val price = "제품 가격 : " + moneyFormatToWon(Integer.parseInt(myInt?.getValue("price").toString())) + "원"
-            val upPrice =  "(상승단위 : " +  moneyFormatToWon(Integer.parseInt(myInt?.getValue("upprice").toString())) +"원)"
+            val price = "제품 가격 : " + moneyFormatToWon(
+                Integer.parseInt(myInt?.getValue("price").toString())
+            ) + "원"
+            val upPrice =  "(상승단위 : " + moneyFormatToWon(
+                Integer.parseInt(myInt?.getValue("upprice").toString())
+            ) +"원)"
             Picasso.with(context).load(myInt?.getValue("imgRes")).resize(400,200).into(detail_img)
             detail_price_tv.text = price
             detail_info_tv.text ="제품 설명 \n " + myInt?.getValue("detailinfo").toString()
@@ -66,7 +70,7 @@ class ListDetailFragment : Fragment() {
         }
 
         getEnrollersItemInfo()
-
+        getParticipateMember()
 
 
         participate_btn.setOnClickListener {
@@ -74,69 +78,99 @@ class ListDetailFragment : Fragment() {
                 Toast.makeText(requireContext(), "등록자는 입찰할수 없습니다.", Toast.LENGTH_LONG).show()
 
             }else{
+
                 val url = myInt?.getValue("imgRes").toString()
                 val period = myInt?.getValue("period").toString()
-
-                CurMaxPrice = (Integer.parseInt(myInt?.getValue("upprice").toString())+ Integer.parseInt(maxPrice!!)).toString()
+                val itemTitle = myInt?.getValue("title").toString()
+                CurMaxPrice = (Integer.parseInt(myInt?.getValue("upprice").toString())+
+                        Integer.parseInt(maxPrice!!)).toString()
 
                 for (users in participantsdatas.iterator()){
-                    Log.d("check", "dfsd $users")
-                    if(IsAlreadyIn && loginuser!=users.participants){
-                        curParticipantNum = Integer.parseInt(participateNumber!!)+1
-                        IsAlreadyIn = false
+                    if(users.participants?.contains(loginuser)!!){
+                        IsAlreadyIn = true
                     }
+
                 }
 
+                //이미 입찰목록에 있으면 몇명이 입찰중인지 알려주는 count 변수에 값을 증가시키지 않는다.
+                if(!IsAlreadyIn){
+                    curParticipantNum = Integer.parseInt(participateNumber!!)+1
+                }else{
+                    curParticipantNum = Integer.parseInt(participateNumber!!)
+                }
 
-                val participateItemResult =
+                //등록탭에서 아이템을 등록하면 새로운 트리 만들어주기
+                val myEnrollItemResult =
                     detailDataList(
                         curParticipantNum.toString(),
                         CurMaxPrice,
                         enrollerUid,
                         url,
-                        period
-                    )
-                val itemTitle = myInt?.getValue("title").toString()
+                        period,
+                        itemTitle
 
-                databaseReference.child("enroller").child(itemTitle).setValue(participateItemResult)
-                databaseReference.child("enroller").child(itemTitle).child("participants").child("user").setValue(loginuser)
-                databaseReference.child("info").child(enrollerUid!!).child(itemTitle).child("maxPrice").setValue(CurMaxPrice)
+                    )
+                databaseReference.child("WhoUploadItem").child(itemTitle).setValue(myEnrollItemResult)
+
+
+                //입찰버튼 누르면 내 입찰 목록으로 가져오기 위해 만들어주는 트리
+                val myParticipateItem =
+                    MyParticipateItemList(
+                        itemTitle,
+                        CurMaxPrice,
+                        url,
+                        period,
+                        loginuser
+
+                    )
+                databaseReference.child("ListOfItemEnroller")
+                    .child("participants/$loginuser").child(itemTitle).setValue(myParticipateItem)
+
+                //메인 리스트 뷰 최대 값 바꿔주기
+                databaseReference.child("info").child(enrollerUid!!)
+                    .child(itemTitle).child("maxPrice").setValue(CurMaxPrice)
+
                 findNavController().navigate(R.id.itemlistFragment)
             }
         }
     }
 
+    //누가 등록했는지 값을 가져오게한다.
     private fun getEnrollersItemInfo() {
         firebasedb = FirebaseDatabase.getInstance()
         val itemTitle = myInt?.getValue("title").toString()
-        firebasedb!!.reference.child("enroller").child(itemTitle).addValueEventListener(object : ValueEventListener {
+        firebasedb!!.reference.child("WhoUploadItem").child(itemTitle).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                Log.d("check2", "$dataSnapshot")
 
+                    enrollerUid = dataSnapshot.child("enrolleruid").getValue(String::class.java)
+                    participateNumber = dataSnapshot.child("count").getValue(String::class.java)
+                    maxPrice = dataSnapshot.child("maxprice").getValue(String::class.java)
+                    participate_number_tv?.text = getString(R.string.num, participateNumber)
 
-
-                enrollerUid = dataSnapshot.child("enrolleruid").getValue(String::class.java)
-
-                participateNumber = dataSnapshot.child("count").getValue(String::class.java)
-
-
-                participate_number_tv?.text = getString(R.string.num, participateNumber)
-
-
-
-
-                maxPrice = dataSnapshot.child("maxprice").getValue(String::class.java)
-
-                checkInvoleInItem = dataSnapshot.child("participants").child("user").getValue(String::class.java)
-                participantsdatas.add(participantsCheck(checkInvoleInItem))
             }
-
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("check", "failed to get database data")
             }
         })
+    }
 
+    //누가 입찰했는지 값을 가져오게한다.
+    private fun getParticipateMember() {
+        firebasedb = FirebaseDatabase.getInstance()
+        val itemTitle = myInt?.getValue("title").toString()
+        firebasedb!!.reference.child("ListOfItemEnroller").child("participants").child(loginuser).addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val checkInvoleInItem = dataSnapshot.child(itemTitle)
+                for (user in checkInvoleInItem.children){
 
-
+                    participantsdatas.add(participantsCheck(user.value.toString()))
+                }
+            }
+            override fun onCancelled(p0: DatabaseError) {
+                Log.d("check", "failed to get database data")
+            }
+        })
     }
 
 

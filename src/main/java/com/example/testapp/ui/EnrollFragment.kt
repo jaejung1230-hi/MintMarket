@@ -11,12 +11,12 @@ import com.example.testapp.activity.Main2Activity
 import com.example.testapp.R
 import com.example.testapp.adapter.EnrollListAdapter
 import com.example.testapp.dataclass.ItemListDao
-import com.example.testapp.dataclass.ShowFirebaseDataOnList
-import com.example.testapp.moneyFormatToWon
+import com.example.testapp.util.moneyFormatToWon
 import com.google.firebase.database.*
 import com.google.firebase.storage.StorageReference
+import kotlinx.android.synthetic.main.fragment_enroll.*
 import kotlinx.android.synthetic.main.my_list_fragment.*
-import kotlin.math.log
+import kotlinx.android.synthetic.main.my_list_fragment.swipe_my_list_fragment
 
 class EnrollFragment : Fragment() {
     var datas = ArrayList<ItemListDao>()
@@ -25,12 +25,13 @@ class EnrollFragment : Fragment() {
     private var storageRef : StorageReference? = null
     var enrolleruid : String? = null
     val loginuser = Main2Activity.loginuser.uid
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        return inflater.inflate(R.layout.my_list_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_enroll, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -41,44 +42,43 @@ class EnrollFragment : Fragment() {
         initStorage()
 
         view.let {
-            my_list_rv.adapter = EnrollListAdapter(datas)
-            my_list_rv.layoutManager = LinearLayoutManager(requireContext())
+            my_enroll_rv.adapter = EnrollListAdapter(datas)
+            my_enroll_rv.layoutManager = LinearLayoutManager(requireContext())
 
-            swipe_my_list_fragment.setOnRefreshListener {
-                my_list_rv.adapter?.notifyDataSetChanged()
+            swipe_enroll_fragment.setOnRefreshListener {
+                my_enroll_rv.adapter?.notifyDataSetChanged()
 
-                swipe_my_list_fragment.isRefreshing = false
+                swipe_enroll_fragment.isRefreshing = false
             }
         }
-
-
-
     }
     private fun initStorage(){
         firebasedb = FirebaseDatabase.getInstance()
 
-        firebasedb!!.reference.child("enroller").addValueEventListener(object : ValueEventListener {
+        firebasedb!!.reference.child("ListOfItemEnroller").child("participants").child(loginuser).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
 
                 datas.clear()
 
                 for(itemData in p0.children){
-                    val participate = itemData.child("participants").getValue(String::class.java)
-                    if(participate == loginuser) {
-                        enrolleruid = itemData.child("enrolleruid").getValue(String::class.java)
-                        //Log.d("check1", "itemData : ${itemData}")
-                        val count: String? = itemData.child("count").getValue(String::class.java)
-                        val imgRes = itemData.child("imgRes").getValue(String::class.java)
-                        val maxPrice = moneyFormatToWon(Integer.parseInt(itemData.child("maxPrice").getValue(String::class.java)!!))
-                        val period = itemData.child("period").getValue(String::class.java)
-                        val title = itemData.child("title").getValue(String::class.java)
-                        datas.add(
-                            ItemListDao(
-                                count, maxPrice, enrolleruid, imgRes, period, title
-                            )
+                    Log.d("check", "enroll $itemData")
+                    val count: String? = itemData.child("count").getValue(String::class.java)
+                    val imgRes = itemData.child("url").getValue(String::class.java)
+                    val maxPrice = moneyFormatToWon(
+                        Integer.parseInt(
+                            itemData.child("maxprice").getValue(String::class.java)!!
                         )
-                    }
+                    )
+                    val period = itemData.child("itemperiod").getValue(String::class.java)
+                    val title = itemData.child("title").getValue(String::class.java)
+                    datas.add(
+                        ItemListDao(
+                            count, maxPrice, enrolleruid, imgRes, period, title
+                        )
+                    )
+
                 }
+
             }
 
             override fun onCancelled(p0: DatabaseError) {

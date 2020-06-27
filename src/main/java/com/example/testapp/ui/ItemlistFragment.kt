@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testapp.adapter.ItemAdapter
 import com.example.testapp.R
 import com.example.testapp.dataclass.ShowFirebaseDataOnList
-import com.example.testapp.moneyFormatToWon
+import com.example.testapp.util.moneyFormatToWon
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -80,7 +80,11 @@ class ItemlistFragment : Fragment() {
                         val detailInfo = itemData.child("detailinfo").getValue(String::class.java)
                         val imgRes = itemData.child("imgRes").getValue(String::class.java)
                         val loginuid = itemData.child("loginuid").getValue(String::class.java)
-                        val maxPrice = moneyFormatToWon(Integer.parseInt(itemData.child("maxPrice").getValue(String::class.java)!!))
+                        val maxPrice = moneyFormatToWon(
+                            Integer.parseInt(
+                                itemData.child("maxPrice").getValue(String::class.java)!!
+                            )
+                        )
                         val period = itemData.child("period").getValue(String::class.java)
                         val price = itemData.child("price").getValue(String::class.java)
                         val title = itemData.child("title").getValue(String::class.java)
@@ -96,14 +100,8 @@ class ItemlistFragment : Fragment() {
                                 loginuid!!, maxPrice!!, detailInfo!!, category!!
                             )
                         )
-
-                        //val msg = itemData.getValue(ShowFirebaseDataOnList::class.java)
-                        //msg?.let { datas.add(it) }
-
                     }
                 }
-                 //Log.d("check", "${message_rv.adapter}")
-                //item_list_rv.adapter?.notifyDataSetChanged()
             }
 
             override fun onCancelled(p0: DatabaseError) {

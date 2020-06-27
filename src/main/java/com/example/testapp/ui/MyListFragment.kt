@@ -10,14 +10,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testapp.activity.Main2Activity
 import com.example.testapp.R
 import com.example.testapp.adapter.MyAddListAdapter
+import com.example.testapp.dataclass.ItemListDao
 import com.example.testapp.dataclass.ShowFirebaseDataOnList
-import com.example.testapp.moneyFormatToWon
+import com.example.testapp.util.moneyFormatToWon
 import com.google.firebase.database.*
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.my_list_fragment.*
 
 class MyListFragment : Fragment() {
-    var datas = ArrayList<ShowFirebaseDataOnList>()
+    var datas = ArrayList<ItemListDao>()
     private var firebasedb : FirebaseDatabase? = null
     private var databaseRef: DatabaseReference? = null
     private var storageRef : StorageReference? = null
@@ -37,7 +38,6 @@ class MyListFragment : Fragment() {
         databaseRef= FirebaseDatabase.getInstance().reference
 
         initStorage()
-        Log.d("check1", "loginuser ${loginuser} enrolleruid : ${enrolleruid}")
 
         view.let {
             my_list_rv.adapter = MyAddListAdapter(datas)
@@ -56,39 +56,37 @@ class MyListFragment : Fragment() {
     private fun initStorage(){
         firebasedb = FirebaseDatabase.getInstance()
 
-        firebasedb!!.reference.child("info").addValueEventListener(object : ValueEventListener {
+        firebasedb!!.reference.child("WhoUploadItem").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
 
                 datas.clear()
-                for(data in p0.children ){
-                    for(itemData in data.children){
-                        enrolleruid = itemData.child("loginuid").getValue(String::class.java)
-                        if(enrolleruid == loginuser) {
-                            val category: String? =itemData.child("category").getValue(String::class.java)
-                            val detailInfo =itemData.child("detailinfo").getValue(String::class.java)
-                            val imgRes = itemData.child("imgRes").getValue(String::class.java)
 
-                            //Log.d("check1", "enrolleruid : ${enrolleruid}")
-                            val maxPrice = moneyFormatToWon(Integer.parseInt(itemData.child("maxPrice").getValue(String::class.java)!!))
+                for(itemData in p0.children){
 
-                            val period = itemData.child("period").getValue(String::class.java)
-                            val price = itemData.child("price").getValue(String::class.java)
-                            val title = itemData.child("title").getValue(String::class.java)
-                            val upprice = itemData.child("upprice").getValue(String::class.java)
-                            datas.add(
-                                ShowFirebaseDataOnList(
-                                    imgRes!!, title!!, price!!, upprice!!, period!!,
-                                    enrolleruid!!, maxPrice!!, detailInfo!!, category!!
-                                )
+                    enrolleruid = itemData.child("enrolleruid").getValue(String::class.java)
+                    Log.d("check1", "loginuser ${loginuser} enrolleruid : ${enrolleruid}")
+
+                    if(loginuser == enrolleruid) {
+                        val count = itemData.child("count").getValue(String::class.java)
+                        val imgRes = itemData.child("url").getValue(String::class.java)
+                        val maxPrice = moneyFormatToWon(
+                            Integer.parseInt(
+                                itemData.child("maxprice").getValue(String::class.java)!!
                             )
-                        }
-                        //val msg = itemData.getValue(ShowFirebaseDataOnList::class.java)
-                        //msg?.let { datas.add(it) }
-
+                        )
+                        val period = itemData.child("itemperiod").getValue(String::class.java)
+                        val title = itemData.child("title").getValue(String::class.java)
+                        datas.add(
+                            ItemListDao(
+                                count, maxPrice, enrolleruid, imgRes, period, title
+                            )
+                        )
                     }
+                    //val msg = itemData.getValue(ShowFirebaseDataOnList::class.java)
+                    //msg?.let { datas.add(it) }
+
                 }
-                //Log.d("check", "${message_rv.adapter}")
-                //item_list_rv.adapter?.notifyDataSetChanged()
+
             }
 
             override fun onCancelled(p0: DatabaseError) {
