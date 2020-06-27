@@ -3,36 +3,33 @@ package com.example.testapp.ui
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore.Images.Media
 import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
-import android.widget.DatePicker
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.loader.content.CursorLoader
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.testapp.*
-import com.google.android.gms.tasks.Task
+import com.example.testapp.activity.Main2Activity
+import com.example.testapp.dataclass.Category
+import com.example.testapp.dataclass.Period
+import com.example.testapp.dataclass.StuffInfo
+import com.example.testapp.dataclass.detailDataList
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.fragment_add.*
 import kotlinx.android.synthetic.main.item_list.*
 import java.io.File
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.jar.Manifest
 
 
 /**
@@ -115,16 +112,16 @@ open class AddFragment : Fragment() {
         val itemPrice : String = start_cost_edit?.text.toString()
         val itemName :String = title_edit?.text.toString()
         val itemUpPrice: String = jump_cost_edit?.text.toString()
-        val itemPeriod:String = "입찰만료날짜 : "+df.format(cal.time).toString()
+        val itemPeriod:String = df.format(cal.time).toString()
         val itemCategory:String = categorys_spinner?.selectedItem.toString()
         val itemDetailInfo:String = detailinfo_edit?.text.toString()
         maxPrice = itemPrice
-        Log.d("check", "addFragment maxPrice : $maxPrice")
-        val file: Uri = Uri.fromFile(File(uri))
 
+        val file: Uri = Uri.fromFile(File(uri))
+        Log.d("check", "url ${file.lastPathSegment}")
         val riversRef = storageRef?.child("images/" + "${file.lastPathSegment}")
         val uploadTask = riversRef?.putFile(file)
-
+///storage/emulated/0/DCIM/Camera/IMG_20200627_033321.jpg
         uploadTask?.continueWith {
             if (!it.isSuccessful) {
                 Log.d("check", "upload failed")
@@ -139,7 +136,13 @@ open class AddFragment : Fragment() {
                         url, itemName, itemPrice, itemUpPrice,
                         itemPeriod, itemCategory, itemDetailInfo, loginuser, maxPrice!!
                     )
-                    val tmp = detailDataList("1", maxPrice!! , loginuser)
+                    val tmp = detailDataList(
+                        "0",
+                        maxPrice!!,
+                        loginuser,
+                        url,
+                        itemPeriod
+                    )
 
                     //val enroll = detailDataList(loginuser)
                     databaseReference.child("info").child("$loginuser/$itemName").setValue(result)

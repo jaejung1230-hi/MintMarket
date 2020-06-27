@@ -1,22 +1,14 @@
-package com.example.testapp
+package com.example.testapp.adapter
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide.get
-import com.example.testapp.ui.ItemlistFragment
-import com.example.testapp.ui.ListDetailFragment
-import com.google.android.gms.actions.ItemListIntents
+import com.example.testapp.R
+import com.example.testapp.dataclass.ShowFirebaseDataOnList
 import com.squareup.picasso.Picasso
-import io.grpc.okhttp.internal.Platform.get
-import kotlinx.android.synthetic.main.fragment_add.view.*
 import kotlinx.android.synthetic.main.item_list.view.*
 
 class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.Adapter<ItemAdapter.ViewHolder>(){
@@ -34,13 +26,7 @@ class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.A
 
     }
 
-    fun setData(newItems: ArrayList<ShowFirebaseDataOnList>){
-        val diffCallback = DiffCallback(items, newItems)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        items.clear()
-        items.addAll(newItems)
-        diffResult.dispatchUpdatesTo(this)
-    }
+
 
 
     inner class ViewHolder(val item: View) : RecyclerView.ViewHolder(item) {
@@ -62,6 +48,7 @@ class ItemAdapter(val items: ArrayList<ShowFirebaseDataOnList>) : RecyclerView.A
                 data["detailinfo"] = items.detailinfo
                 data["category"] = items.category
                 data["loginuid"] = items.loginuid
+                data["period"] = items.period
 
 
 

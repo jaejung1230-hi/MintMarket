@@ -4,6 +4,7 @@
 
     <application
         android:allowBackup="true"
+        android:name=".service.UserPreference"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -11,9 +12,28 @@
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StuffRegistrationActivity"></activity>
-        <activity android:name=".Main2Activity" />
-        <activity android:name=".MainActivity">
+
+        <service
+            android:name=".service.RealService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".service.AlarmRecever"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".service.RebootRecever"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".StuffRegistrationActivity" />
+        <activity android:name=".activity.Main2Activity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,10 +43,13 @@
     </application>
     <!-- camera, gallery -->
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <!-- 인터넷 사용 권한 -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 서비스, 브로드케스트 권한 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
 </manifest>

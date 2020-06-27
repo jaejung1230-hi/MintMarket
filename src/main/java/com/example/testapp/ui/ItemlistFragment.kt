@@ -1,8 +1,5 @@
 package com.example.testapp.ui
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,27 +9,19 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.testapp.*
+import com.example.testapp.adapter.ItemAdapter
 import com.example.testapp.R
-import com.google.android.gms.tasks.OnSuccessListener
+import com.example.testapp.dataclass.ShowFirebaseDataOnList
+import com.example.testapp.moneyFormatToWon
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_itemlist.*
-import kotlinx.android.synthetic.main.fragment_itemlist.view.*
-import org.w3c.dom.Comment
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URI
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * A simple [Fragment] subclass.
  */
 class ItemlistFragment : Fragment() {
-    //var list = view?.findViewById(R.id.bottom_navigation) as BottomNavigationView
     private var firebasedb : FirebaseDatabase? = null
     private var databaseRef: DatabaseReference? = null
     private var storageRef : StorageReference? = null
@@ -44,51 +33,83 @@ class ItemlistFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        initStorage()
         return inflater.inflate(R.layout.fragment_itemlist, container, false)
     }
 
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+
+
+
         databaseRef= FirebaseDatabase.getInstance().reference
         storageRef = FirebaseStorage.getInstance().getReference("images")
 
 
-        //val items = (requireContext() as Main2Activity).itemRepository
 
-        view?.let{
+        view.let{
+            item_list_rv.adapter = ItemAdapter(datas)
 
+            item_list_rv.layoutManager = LinearLayoutManager(requireContext())
 
+            swipe_home_list_fragment.setOnRefreshListener {
+                item_list_rv.adapter?.notifyDataSetChanged()
 
-            it.message_rv.adapter = ItemAdapter(datas)
-            it.message_rv.layoutManager = LinearLayoutManager(requireContext())
+                swipe_home_list_fragment.isRefreshing = false
+            }
         }
         NavigationUI.setupWithNavController(
-            bottom_navigation1,
+            item_list_navigation,
             requireActivity().findNavController(R.id.nav_host_fragment)
         )
+        initStorage()
     }
     private fun initStorage(){
         firebasedb = FirebaseDatabase.getInstance()
 
         firebasedb!!.reference.child("info").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
-                //Log.d("check", "itemlistFragment p0 ${p0}")
+
                 datas.clear()
                 for(data in p0.children ){
+                    //Log.d("check", "itemlistFragment data ${data}")
                     for(itemData in data.children){
-
                         //Log.d("check", "itemData : ${itemData}")
-                        val msg = itemData.getValue(ShowFirebaseDataOnList::class.java)
-                        msg?.let { datas.add(it) }
+                        val category : String? = itemData.child("category").getValue(String::class.java)
+                        val detailInfo = itemData.child("detailinfo").getValue(String::class.java)
+                        val imgRes = itemData.child("imgRes").getValue(String::class.java)
+                        val loginuid = itemData.child("loginuid").getValue(String::class.java)
+                        val maxPrice = moneyFormatToWon(Integer.parseInt(itemData.child("maxPrice").getValue(String::class.java)!!))
+                        val period = itemData.child("period").getValue(String::class.java)
+                        val price = itemData.child("price").getValue(String::class.java)
+                        val title = itemData.child("title").getValue(String::class.java)
+                        val upprice = itemData.child("upprice").getValue(String::class.java)
+
+                        datas.add(
+                            ShowFirebaseDataOnList(
+                                imgRes!!,
+                                title!!,
+                                price!!,
+                                upprice!!,
+                                period!!,
+                                loginuid!!, maxPrice!!, detailInfo!!, category!!
+                            )
+                        )
+
+                        //val msg = itemData.getValue(ShowFirebaseDataOnList::class.java)
+                        //msg?.let { datas.add(it) }
 
                     }
                 }
+                 //Log.d("check", "${message_rv.adapter}")
+                //item_list_rv.adapter?.notifyDataSetChanged()
             }
+
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("check", "failed to get database data")
             }
         })
+
     }
 }

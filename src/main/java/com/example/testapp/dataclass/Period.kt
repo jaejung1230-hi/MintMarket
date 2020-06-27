@@ -1,4 +1,4 @@
-package com.example.testapp
+package com.example.testapp.dataclass
 
 enum class Period(val period: String){
     oneday("1일"),

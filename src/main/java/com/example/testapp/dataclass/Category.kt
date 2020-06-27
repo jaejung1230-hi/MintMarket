@@ -1,4 +1,4 @@
-package com.example.testapp
+package com.example.testapp.dataclass
 
 enum class Category(val category: String){
     Living("생활/가전"),

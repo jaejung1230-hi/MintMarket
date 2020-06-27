@@ -7,31 +7,37 @@
     android:layout_height="match_parent"
     tools:context=".ui.ItemlistFragment">
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/message_rv"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_home_list_fragment"
         android:layout_width="match_parent"
         android:layout_height="550dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:context=".ui.ItemlistFragment"
-        tools:listitem="@layout/item_list" />
-
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_list_rv"
+            android:layout_width="match_parent"
+            android:layout_height="550dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/item_list_navigation"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:context=".ui.ItemlistFragment"
+            tools:listitem="@layout/item_list" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation1"
+        android:id="@+id/item_list_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_rv"
+        app:layout_constraintTop_toBottomOf="@+id/swipe_home_list_fragment"
         app:menu="@menu/menu_bottom" />
     <View
         android:id="@+id/viewDivider"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/primaryDivider"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation1"/>
+        app:layout_constraintBottom_toTopOf="@+id/item_list_navigation"/>
 
     <FrameLayout
         android:id="@+id/fragmentContainer"

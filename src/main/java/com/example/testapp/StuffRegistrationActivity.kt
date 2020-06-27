@@ -1,18 +1,18 @@
 package com.example.testapp
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.StrictMode
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.testapp.dataclass.Category
+import com.example.testapp.dataclass.Period
+import com.example.testapp.dataclass.StuffInfo
 import kotlinx.android.synthetic.main.activity_stuff_registration.*
 
 
@@ -34,8 +34,10 @@ class StuffRegistrationActivity : AppCompatActivity() {
             startActivityForResult(intent, REQUEST_CODE)
         }
         ///////////////////////////////////////////////////////
-        period_spinner.adapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,Period.values().map{it.period})
-        category_spinner.adapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,Category.values().map { it.category })
+        period_spinner.adapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,
+            Period.values().map{it.period})
+        category_spinner.adapter = ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,
+            Category.values().map { it.category })
 
         ///////////////////////////////////////////////////////
         send_info_btn.setOnClickListener {
@@ -56,17 +58,18 @@ class StuffRegistrationActivity : AppCompatActivity() {
                 Toast.makeText(this,"상세내용을 입력해 주세요!",Toast.LENGTH_SHORT).show()
             }
             else {
-                val stuffInfo: StuffInfo = StuffInfo(
-                    stuff_image.getDrawable() as String,
-                    title_edit.getText().toString(),
-                    start_cost_edit.getText().toString(),
-                    jump_cost_edit.getText().toString(),
-                    period_spinner.getSelectedItem().toString(),
-                    category_spinner.getSelectedItem().toString(),
-                    detail_info_edit.getText().toString(),
-                    loginuid = "",
-                    maxPrice = ""
-                )/*
+                val stuffInfo: StuffInfo =
+                    StuffInfo(
+                        stuff_image.getDrawable() as String,
+                        title_edit.getText().toString(),
+                        start_cost_edit.getText().toString(),
+                        jump_cost_edit.getText().toString(),
+                        period_spinner.getSelectedItem().toString(),
+                        category_spinner.getSelectedItem().toString(),
+                        detail_info_edit.getText().toString(),
+                        loginuid = "",
+                        maxPrice = ""
+                    )/*
                 Log.d("stuffInfo", stuffInfo.imgRes.toString())
                 Log.d("stuffInfo", R.drawable.noimage.toString())
                 Log.d("stuffInfo", stuffInfo.title.toString())

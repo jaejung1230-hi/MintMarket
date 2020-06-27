@@ -2,27 +2,25 @@ package com.example.testapp.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
+import android.view.animation.AnimationUtils.loadAnimation
+import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.example.testapp.Main2Activity
-import com.example.testapp.MainActivity
+import com.example.testapp.activity.Main2Activity
+import com.example.testapp.activity.MainActivity
 import com.example.testapp.R
+
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_my_info.*
-import kotlinx.android.synthetic.main.my_list_fragment.*
 
 class MyInfoFragment : Fragment() {
+    var isOpen = false
 
-
-    private lateinit var auth: FirebaseAuth
     var loginuser = Main2Activity.loginuser.displayName
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,10 +35,43 @@ class MyInfoFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         NavigationUI.setupWithNavController(
-            bottom_navigation3,
+            my_info_navigation,
             requireActivity().findNavController(R.id.nav_host_fragment)
         )
 
+        val fabOpen = loadAnimation(context, R.anim.fab_open)
+        val fabClose = loadAnimation(context, R.anim.fab_close)
+        val fabRClockwise = loadAnimation(context, R.anim.rotate_clockwise)
+        val fabRAntiClockwise = loadAnimation(context, R.anim.rotate_anticlockwise)
+
+        addBtn.setOnClickListener{
+            if(isOpen){
+                sellBtn.startAnimation(fabClose)
+                buyBtn.startAnimation(fabClose)
+                addBtn.startAnimation(fabRClockwise)
+
+                isOpen = false
+            } else{
+                sellBtn.startAnimation(fabOpen)
+                buyBtn.startAnimation(fabOpen)
+                addBtn.startAnimation(fabRAntiClockwise)
+
+                sellBtn.isClickable
+                buyBtn.isClickable
+
+                isOpen = true
+
+                buyBtn.setOnClickListener{
+
+                    findNavController().navigate(R.id.myListFragment)
+
+                }
+                sellBtn.setOnClickListener {
+                    findNavController().navigate(R.id.myenrollFragment)
+
+                }
+            }
+        }
 
         userId.text = loginuser.toString()
 

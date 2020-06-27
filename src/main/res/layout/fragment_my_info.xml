@@ -35,7 +35,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.655"
-            app:layout_constraintStart_toEndOf="@+id/bottom_navigation3"
+            app:layout_constraintStart_toEndOf="@+id/my_info_navigation"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.099" />
     <View
@@ -45,7 +45,7 @@
         android:background="@color/primaryDivider"
         app:layout_constraintBottom_toBottomOf="@+id/logout"/>
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation3"
+        android:id="@+id/my_info_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="448dp"
@@ -59,14 +59,59 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/primaryDivider"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation3"/>
+        app:layout_constraintBottom_toTopOf="@+id/my_info_navigation"/>
 
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/viewDivider"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buyBtn"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="130dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginEnd="24dp"
+            app:borderWidth="0dp"
+            app:fabSize="mini"
+            android:elevation="6dp"
+            app:pressedTranslationZ="12dp"
+            android:visibility="invisible"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sellBtn"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="80dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginEnd="24dp"
+            app:borderWidth="0dp"
+            app:fabSize="mini"
+            android:elevation="6dp"
+            app:pressedTranslationZ="12dp"
+            android:visibility="invisible"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/addBtn"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            app:borderWidth="0dp"
+            app:fabSize="normal"
+            android:elevation="6dp"
+            app:pressedTranslationZ="12dp"
+            />
+
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
