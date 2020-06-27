@@ -70,7 +70,6 @@ class ListDetailFragment : Fragment() {
         }
 
         getEnrollersItemInfo()
-        getParticipateMember()
 
 
         participate_btn.setOnClickListener {
@@ -93,24 +92,8 @@ class ListDetailFragment : Fragment() {
                 }
 
                 //이미 입찰목록에 있으면 몇명이 입찰중인지 알려주는 count 변수에 값을 증가시키지 않는다.
-                if(!IsAlreadyIn){
-                    curParticipantNum = Integer.parseInt(participateNumber!!)+1
-                }else{
-                    curParticipantNum = Integer.parseInt(participateNumber!!)
-                }
 
-                //등록탭에서 아이템을 등록하면 새로운 트리 만들어주기
-                val myEnrollItemResult =
-                    detailDataList(
-                        curParticipantNum.toString(),
-                        CurMaxPrice,
-                        enrollerUid,
-                        url,
-                        period,
-                        itemTitle
-
-                    )
-                databaseReference.child("WhoUploadItem").child(itemTitle).setValue(myEnrollItemResult)
+                curParticipantNum = Integer.parseInt(participateNumber!!)+1
 
 
                 //입찰버튼 누르면 내 입찰 목록으로 가져오기 위해 만들어주는 트리
@@ -127,8 +110,8 @@ class ListDetailFragment : Fragment() {
                     .child("participants/$loginuser").child(itemTitle).setValue(myParticipateItem)
 
                 //메인 리스트 뷰 최대 값 바꿔주기
-                databaseReference.child("info").child(enrollerUid!!)
-                    .child(itemTitle).child("maxPrice").setValue(CurMaxPrice)
+                databaseReference.child("info").child(itemTitle).child("maxPrice").setValue(CurMaxPrice)
+                databaseReference.child("info").child(itemTitle).child("count").setValue(curParticipantNum.toString())
 
                 findNavController().navigate(R.id.itemlistFragment)
             }
@@ -139,13 +122,13 @@ class ListDetailFragment : Fragment() {
     private fun getEnrollersItemInfo() {
         firebasedb = FirebaseDatabase.getInstance()
         val itemTitle = myInt?.getValue("title").toString()
-        firebasedb!!.reference.child("WhoUploadItem").child(itemTitle).addValueEventListener(object : ValueEventListener {
+        firebasedb!!.reference.child("info").child(itemTitle).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Log.d("check2", "$dataSnapshot")
 
                     enrollerUid = dataSnapshot.child("enrolleruid").getValue(String::class.java)
                     participateNumber = dataSnapshot.child("count").getValue(String::class.java)
-                    maxPrice = dataSnapshot.child("maxprice").getValue(String::class.java)
+                    maxPrice = dataSnapshot.child("maxPrice").getValue(String::class.java)
                     participate_number_tv?.text = getString(R.string.num, participateNumber)
 
             }
@@ -155,23 +138,6 @@ class ListDetailFragment : Fragment() {
         })
     }
 
-    //누가 입찰했는지 값을 가져오게한다.
-    private fun getParticipateMember() {
-        firebasedb = FirebaseDatabase.getInstance()
-        val itemTitle = myInt?.getValue("title").toString()
-        firebasedb!!.reference.child("ListOfItemEnroller").child("participants").child(loginuser).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val checkInvoleInItem = dataSnapshot.child(itemTitle)
-                for (user in checkInvoleInItem.children){
-
-                    participantsdatas.add(participantsCheck(user.value.toString()))
-                }
-            }
-            override fun onCancelled(p0: DatabaseError) {
-                Log.d("check", "failed to get database data")
-            }
-        })
-    }
 
 
 }

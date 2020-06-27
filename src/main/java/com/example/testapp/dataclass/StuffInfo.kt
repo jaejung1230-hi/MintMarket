@@ -7,5 +7,5 @@ import androidx.annotation.DrawableRes
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class StuffInfo(val imgRes: String, val title: String, val price: String,
+data class StuffInfo(val count : String, val enrolleruid : String, val imgRes: String, val title: String, val price: String,
                      val upprice: String, val period: String, val category: String, val detailinfo: String, val loginuid : String, val maxPrice : String) : Parcelable

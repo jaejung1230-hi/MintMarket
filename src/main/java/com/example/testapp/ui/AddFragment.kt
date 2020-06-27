@@ -133,21 +133,19 @@ open class AddFragment : Fragment() {
                     val url = task.toString().substring(0, task.toString().indexOf("&token"))
 
                     val result = StuffInfo(
-                        url, itemName, itemPrice, itemUpPrice,
+                        "0",loginuser,url, itemName, itemPrice, itemUpPrice,
                         itemPeriod, itemCategory, itemDetailInfo, loginuser, maxPrice!!
                     )
-                    val whoisupload = detailDataList(
+                    /*val whoisupload = detailDataList(
                         "0",
                         maxPrice!!,
                         loginuser,
                         url,
                         itemPeriod,
                         itemName
-                    )
-
-                    //val enroll = detailDataList(loginuser)
-                    databaseReference.child("info").child("$loginuser/$itemName").setValue(result)
-                    databaseReference.child("WhoUploadItem").child(itemName).setValue(whoisupload)
+                    )*/
+                    databaseReference.child("info").child("$itemName").setValue(result)
+                    //databaseReference.child("WhoUploadItem").child(itemName).setValue(whoisupload)
 
                 }
 
@@ -155,8 +153,6 @@ open class AddFragment : Fragment() {
         }
 
     }
-
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -56,7 +56,7 @@ class MyListFragment : Fragment() {
     private fun initStorage(){
         firebasedb = FirebaseDatabase.getInstance()
 
-        firebasedb!!.reference.child("WhoUploadItem").addValueEventListener(object : ValueEventListener {
+        firebasedb!!.reference.child("info").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
 
                 datas.clear()
@@ -68,13 +68,13 @@ class MyListFragment : Fragment() {
 
                     if(loginuser == enrolleruid) {
                         val count = itemData.child("count").getValue(String::class.java)
-                        val imgRes = itemData.child("url").getValue(String::class.java)
+                        val imgRes = itemData.child("imgRes").getValue(String::class.java)
                         val maxPrice = moneyFormatToWon(
                             Integer.parseInt(
-                                itemData.child("maxprice").getValue(String::class.java)!!
+                                itemData.child("maxPrice").getValue(String::class.java)!!
                             )
                         )
-                        val period = itemData.child("itemperiod").getValue(String::class.java)
+                        val period = itemData.child("period").getValue(String::class.java)
                         val title = itemData.child("title").getValue(String::class.java)
                         datas.add(
                             ItemListDao(

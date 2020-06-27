@@ -46,4 +46,9 @@
         android:name="com.example.testapp.ui.EnrollFragment"
         android:label="@string/enroll_list"
         tools:layout="@layout/fragment_enroll" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.testapp.chatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 </navigation>

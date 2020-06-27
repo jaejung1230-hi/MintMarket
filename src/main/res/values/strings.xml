@@ -22,5 +22,6 @@
 
     <string name="num">·현재 %s명이 입찰중인 상품입니다.</string>
     <string name="enroll_list">입찰목록</string>
+    <string name="doyouwannaChat">채팅하려면 클릭하세요</string>
 
 </resources>

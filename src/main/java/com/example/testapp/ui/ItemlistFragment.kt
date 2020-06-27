@@ -72,17 +72,17 @@ class ItemlistFragment : Fragment() {
             override fun onDataChange(p0: DataSnapshot) {
 
                 datas.clear()
-                for(data in p0.children ){
+
                     //Log.d("check", "itemlistFragment data ${data}")
-                    for(itemData in data.children){
-                        //Log.d("check", "itemData : ${itemData}")
+                    for(itemData in p0.children){
+                        Log.d("check", "itemData : ${itemData}")
                         val category : String? = itemData.child("category").getValue(String::class.java)
                         val detailInfo = itemData.child("detailinfo").getValue(String::class.java)
                         val imgRes = itemData.child("imgRes").getValue(String::class.java)
                         val loginuid = itemData.child("loginuid").getValue(String::class.java)
-                        val maxPrice = moneyFormatToWon(
+                        val maxPrice  = moneyFormatToWon(
                             Integer.parseInt(
-                                itemData.child("maxPrice").getValue(String::class.java)!!
+                                itemData.child("maxPrice").getValue(String::class.java).toString()
                             )
                         )
                         val period = itemData.child("period").getValue(String::class.java)
@@ -92,15 +92,14 @@ class ItemlistFragment : Fragment() {
 
                         datas.add(
                             ShowFirebaseDataOnList(
-                                imgRes!!,
-                                title!!,
+                                imgRes!!, title!!,
                                 price!!,
                                 upprice!!,
                                 period!!,
                                 loginuid!!, maxPrice!!, detailInfo!!, category!!
                             )
                         )
-                    }
+
                 }
             }
 

@@ -46,29 +46,33 @@ class MyInfoFragment : Fragment() {
 
         addBtn.setOnClickListener{
             if(isOpen){
-                sellBtn.startAnimation(fabClose)
-                buyBtn.startAnimation(fabClose)
+                wannasell.startAnimation(fabClose)
+                wannabuy.startAnimation(fabClose)
+                gotochat.startAnimation(fabClose)
                 addBtn.startAnimation(fabRClockwise)
 
                 isOpen = false
             } else{
-                sellBtn.startAnimation(fabOpen)
-                buyBtn.startAnimation(fabOpen)
+                wannasell.startAnimation(fabOpen)
+                wannabuy.startAnimation(fabOpen)
+                gotochat.startAnimation(fabOpen)
                 addBtn.startAnimation(fabRAntiClockwise)
 
-                sellBtn.isClickable
-                buyBtn.isClickable
+                wannasell.isClickable
+                wannabuy.isClickable
+                gotochat.isClickable
 
                 isOpen = true
 
-                buyBtn.setOnClickListener{
-
+                wannabuy.setOnClickListener{
                     findNavController().navigate(R.id.myListFragment)
-
                 }
-                sellBtn.setOnClickListener {
+                wannasell.setOnClickListener {
                     findNavController().navigate(R.id.myenrollFragment)
 
+                }
+                gotochat.setOnClickListener {
+                   findNavController().navigate(R.id.chatFragment)
                 }
             }
         }
