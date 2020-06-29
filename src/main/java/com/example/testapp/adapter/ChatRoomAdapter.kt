@@ -1,16 +1,13 @@
-package com.example.testapp
+package com.example.testapp.adapter
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testapp.R
 import com.example.testapp.chatting.ChatActivity
-import com.example.testapp.chatting.ChatDTO
 import kotlinx.android.synthetic.main.chatmenu_list.view.*
-import kotlinx.android.synthetic.main.item_chat.view.*
 import java.util.ArrayList
 
 class ChatRoomAdapter (val datas: ArrayList<String>): RecyclerView.Adapter<ChatRoomAdapter.ViewHolder>(){

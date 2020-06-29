@@ -42,17 +42,11 @@ class ItemlistFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_itemlist, container, false)
     }
 
-
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-
-
-
         databaseRef = FirebaseDatabase.getInstance().reference
         storageRef = FirebaseStorage.getInstance().getReference("images")
-
 
         initStorage()
 
@@ -61,7 +55,14 @@ class ItemlistFragment : Fragment() {
             item_list_rv.adapter = ItemAdapter(datas)
 
             item_list_rv.layoutManager = LinearLayoutManager(requireContext())
+            //아래로 댕기면 새로고침
+            swipe_home_list_fragment.setOnRefreshListener {
+                item_list_rv.adapter?.notifyDataSetChanged()
 
+                swipe_home_list_fragment.isRefreshing = false
+            }
+
+//품목 필터링
             cate_spinner.adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1, Category.values().map { it.category })
             cate_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -72,19 +73,19 @@ class ItemlistFragment : Fragment() {
                     id: Long
                 ) {
                     val cate = Category.values()[position]
+                    item_list_rv.adapter = ItemAdapter(datas)
+                    Log.d("cate", "$cate")
                     if(cate.name == "ALL"){
                         item_list_rv.adapter = ItemAdapter(datas)
+
                     }else{
-                        //recyclerAdapter.items = datas.filter { it.category == cate.category} as ArrayList<ShowFirebaseDataOnList>
                         item_list_rv.adapter = ItemAdapter(datas.filter { it.category == cate.category} as ArrayList<ShowFirebaseDataOnList>)
                     }
+                    item_list_rv.adapter?.notifyDataSetChanged()
                 }
             }
-            swipe_home_list_fragment.setOnRefreshListener {
-                item_list_rv.adapter?.notifyDataSetChanged()
 
-                swipe_home_list_fragment.isRefreshing = false
-            }
+            //item_list_rv.adapter?.notifyDataSetChanged()
         }
 
 
@@ -93,8 +94,12 @@ class ItemlistFragment : Fragment() {
             item_list_navigation,
             requireActivity().findNavController(R.id.nav_host_fragment)
         )
+
+
     }
 
+
+    //파이어베이스에서 값 가져와서 화면에 뿌려주기
     private fun initStorage(){
         firebasedb = FirebaseDatabase.getInstance()
 
@@ -105,7 +110,6 @@ class ItemlistFragment : Fragment() {
 
                 //Log.d("check", "itemlistFragment data ${data}")
                 for(itemData in p0.children){
-                    Log.d("check", "itemData : ${itemData}")
                     val category : String? = itemData.child("category").getValue(String::class.java)
                     val detailInfo = itemData.child("detailinfo").getValue(String::class.java)
                     val imgRes = itemData.child("imgRes").getValue(String::class.java)
@@ -131,11 +135,13 @@ class ItemlistFragment : Fragment() {
                     )
 
                 }
+
             }
 
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("check", "failed to get database data")
             }
+
         })
 
     }

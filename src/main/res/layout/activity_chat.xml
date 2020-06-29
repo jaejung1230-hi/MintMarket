@@ -11,6 +11,7 @@ tools:context=".chatting.ChatActivity">
     android:id="@+id/message_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccent"
     android:layout_above="@+id/send_layout"/>
 
 <LinearLayout

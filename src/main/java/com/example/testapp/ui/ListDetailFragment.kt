@@ -73,6 +73,7 @@ class ListDetailFragment : Fragment() {
 
 
         participate_btn.setOnClickListener {
+            Log.d("check3", "loginuid : $loginuser ,,,, enrollerUid : $enrollerUid")
             if(loginuser == enrollerUid) {
                 Toast.makeText(requireContext(), "등록자는 입찰할수 없습니다.", Toast.LENGTH_LONG).show()
 
@@ -112,6 +113,7 @@ class ListDetailFragment : Fragment() {
                 //메인 리스트 뷰 최대 값 바꿔주기
                 databaseReference.child("info").child(itemTitle).child("maxPrice").setValue(CurMaxPrice)
                 databaseReference.child("info").child(itemTitle).child("count").setValue(curParticipantNum.toString())
+                databaseReference.child("info").child(itemTitle).child("enrolleruid").setValue(loginuser)
 
                 findNavController().navigate(R.id.itemlistFragment)
             }
@@ -126,11 +128,11 @@ class ListDetailFragment : Fragment() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Log.d("check2", "$dataSnapshot")
 
-                    enrollerUid = dataSnapshot.child("enrolleruid").getValue(String::class.java)
+                    enrollerUid = dataSnapshot.child("loginuid").getValue(String::class.java)
                     participateNumber = dataSnapshot.child("count").getValue(String::class.java)
                     maxPrice = dataSnapshot.child("maxPrice").getValue(String::class.java)
                     participate_number_tv?.text = getString(R.string.num, participateNumber)
-
+                  Log.d("check3", "loginuid1 : $loginuser ,,,, enrollerUid1 : $enrollerUid")
             }
             override fun onCancelled(p0: DatabaseError) {
                 Log.d("check", "failed to get database data")

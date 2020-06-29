@@ -1,4 +1,4 @@
-package com.example.testapp
+package com.example.testapp.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.testapp.adapter.ChatRoomAdapter
+import com.example.testapp.R
 import com.example.testapp.activity.Main2Activity
-import com.example.testapp.ui.ItemlistFragment
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_chat.*
 
@@ -38,7 +39,8 @@ class chatFragment : Fragment() {
                 for(itemData in snapshot.children){
                     itemData.getValue(String::class.java)?.let { datas.add(it) }
                 }
-                chatroom_list.adapter = ChatRoomAdapter(datas)
+                chatroom_list.adapter =
+                    ChatRoomAdapter(datas)
                 chatroom_list.layoutManager = LinearLayoutManager(requireContext())
             }
         })

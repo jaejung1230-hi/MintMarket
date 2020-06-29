@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/itemlistFragment"
         android:name="com.example.testapp.ui.ItemlistFragment"
-        android:label="fragment_itemlist"
+        android:label="경매중"
         tools:layout="@layout/fragment_itemlist" >
         <action
             android:id="@+id/action_itemlistFragment_pop"
@@ -23,22 +23,22 @@
     <fragment
         android:id="@+id/addFragment"
         android:name="com.example.testapp.ui.AddFragment"
-        android:label="fragment_add"
+        android:label="물건 등록"
         tools:layout="@layout/fragment_add" />
     <fragment
         android:id="@+id/myListFragment"
         android:name="com.example.testapp.ui.MyListFragment"
-        android:label="my_list_fragment"
+        android:label="내 등록 물건"
         tools:layout="@layout/my_list_fragment" />
     <fragment
         android:id="@+id/myInfoFragment"
         android:name="com.example.testapp.ui.MyInfoFragment"
-        android:label="fragment_my_info"
+        android:label="내 정보"
         tools:layout="@layout/fragment_my_info" />
     <fragment
         android:id="@+id/listDetailFragment"
         android:name="com.example.testapp.ui.ListDetailFragment"
-        android:label="fragment_list_detail"
+        android:label="물건 상세정보"
         tools:layout="@layout/fragment_list_detail" >
         <argument
             android:name="idx"
@@ -51,8 +51,8 @@
         tools:layout="@layout/fragment_enroll" />
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.example.testapp.chatFragment"
-        android:label="fragment_chat"
+        android:name="com.example.testapp.ui.chatFragment"
+        android:label="채팅방"
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/categoryFragment"

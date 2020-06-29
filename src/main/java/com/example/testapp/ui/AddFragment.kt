@@ -45,7 +45,6 @@ open class AddFragment : Fragment() {
     private var imagePath : String? = null
     companion object{var maxPrice : String? = null}
     val loginuser = Main2Activity.loginuser.uid
-    var Datemsg : String?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -118,7 +117,6 @@ open class AddFragment : Fragment() {
         maxPrice = itemPrice
 
         val file: Uri = Uri.fromFile(File(uri))
-        Log.d("check", "url ${file.lastPathSegment}")
         val riversRef = storageRef?.child("images/" + "${file.lastPathSegment}")
         val uploadTask = riversRef?.putFile(file)
 ///storage/emulated/0/DCIM/Camera/IMG_20200627_033321.jpg
@@ -136,16 +134,7 @@ open class AddFragment : Fragment() {
                         "0",loginuser,url, itemName, itemPrice, itemUpPrice,
                         itemPeriod, itemCategory, itemDetailInfo, loginuser, maxPrice!!
                     )
-                    /*val whoisupload = detailDataList(
-                        "0",
-                        maxPrice!!,
-                        loginuser,
-                        url,
-                        itemPeriod,
-                        itemName
-                    )*/
                     databaseReference.child("info").child("$itemName").setValue(result)
-                    //databaseReference.child("WhoUploadItem").child(itemName).setValue(whoisupload)
 
                 }
 
@@ -154,7 +143,7 @@ open class AddFragment : Fragment() {
 
     }
 
-
+    //갤러리에서 이미지 값 가져오기
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK){
@@ -177,6 +166,8 @@ open class AddFragment : Fragment() {
             }
         }
     }
+
+    //이미지 url받아오기
     fun getPath(uri : Uri) : String {
         val proj:Array<String>  = arrayOf(Media.DATA)
         val cursorLoader  = CursorLoader(requireContext(),uri,proj,null,null,null)
@@ -191,8 +182,7 @@ open class AddFragment : Fragment() {
 
 
 
-
-
+    //나가기 버튼
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.backmaenu,menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -201,11 +191,7 @@ open class AddFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.back -> {
-                val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-
-
                 findNavController().navigate(R.id.itemlistFragment)
-                //fragmentManager.popBackStackImmediate()
                 return super.onOptionsItemSelected(item)
             }
             else -> {
@@ -215,11 +201,4 @@ open class AddFragment : Fragment() {
     }
 
 
-/*    override fun onRequestPermissionsResult( requestCode: Int,        permissions: Array<out String>,        grantResults: IntArray    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == REQUEST_CAMERA){
-            if(grantResults.get(0) == PackageManager.PERMISSION_GRANTED)
-
-        }
-    }*/
 }
