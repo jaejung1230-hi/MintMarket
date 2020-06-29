@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testapp.R
+import com.example.testapp.activity.Main2Activity
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_chat.*
 import java.util.ArrayList
@@ -16,24 +17,11 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-        val chatRef = databaseReference.child("chat").child("test")
+        val path = intent.getStringExtra("chattingroom_name")
+        val chatRef = databaseReference.child("chat").child(path)
 
         var datas = ArrayList<ChatDTO>()
-            chatRef.addListenerForSingleValueEvent(object: ValueEventListener {
 
-                    override fun onCancelled(p0: DatabaseError) {
-                        Log.d("check", "failed to get database data")
-                    }
-
-                    override fun onDataChange(p0: DataSnapshot) {
-                        Log.d("check", "secsess to get database data")
-                        datas.clear()
-                        for(data in p0.children ){
-                            val msg = data.getValue(ChatDTO::class.java)
-                            msg?.let { datas.add(it)}
-                        }
-                    }
-                })
         var chatAdapter = ChatAdapter(datas)
         message_list.adapter = chatAdapter
         message_list.layoutManager = LinearLayoutManager(this)
@@ -69,7 +57,7 @@ class ChatActivity : AppCompatActivity() {
         send_message_btn.setOnClickListener {
             val message = message_edit.getText().toString()
             val chat : ChatDTO =
-                ChatDTO("testUser", message)
+                ChatDTO(Main2Activity.loginuser.displayName!!, message)
             chatRef.push().setValue(chat)
             message_edit.setText("")
         }

@@ -5,7 +5,9 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.startActivity
+import com.example.testapp.chatting.ChatDTO
 import com.example.testapp.dataclass.ShowFirebaseDataOnList
+import com.example.testapp.dataclass.StuffInfo
 import com.firebase.ui.auth.AuthUI.getApplicationContext
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -19,11 +21,10 @@ class MyitemCheck(val id:String?) {
     private var storage: FirebaseStorage? = null
 
     fun check(){
-        var datas = ArrayList<ShowFirebaseDataOnList>()
+        var datas = ArrayList<StuffInfo>()
         if (id != null) {
             FirebaseDatabase.getInstance().reference
                 .child("info")
-                .child(id)
                 .addListenerForSingleValueEvent(object: ValueEventListener{
 
                     override fun onCancelled(p0: DatabaseError) {
@@ -34,8 +35,10 @@ class MyitemCheck(val id:String?) {
                         Log.d("check", "secsess to get database data")
                         datas.clear()
                         for(data in p0.children ){
-                            val msg = data.getValue(ShowFirebaseDataOnList::class.java)
-                            msg?.let { datas.add(it)}
+                            val msg = data.getValue(StuffInfo::class.java)
+                            if (msg != null) {
+                                if(msg.loginuid == id){datas.add(msg)}
+                            }
                         }
                         compareDate(datas)
                     }
@@ -44,7 +47,7 @@ class MyitemCheck(val id:String?) {
 
     }
 
-    fun compareDate(datas: ArrayList<ShowFirebaseDataOnList>) {
+    fun compareDate(datas: ArrayList<StuffInfo>) {
         var tz: TimeZone
         val date = Date()
         val df: DateFormat = SimpleDateFormat("yyyy-MM-dd/HH:mm:ss")
@@ -59,7 +62,16 @@ class MyitemCheck(val id:String?) {
             if(now.compareTo(closeTime) >= 0){
                 Log.d("check","${i.title}은 종료되어야한다!")
                 databaseReference = FirebaseDatabase.getInstance().reference
-                databaseReference.child("info").child(id!!).child(i.title!!).setValue(null)
+                databaseReference.child("info").child(i.title!!).setValue(null)
+                val chat1 : ChatDTO = ChatDTO("관리자", "${i.title}로부터 생성")
+                val chat2 : ChatDTO = ChatDTO("관리자", "${i.maxPrice}로 최종낙찰")
+                val chat3 : ChatDTO = ChatDTO("관리자", "일방적 계약파기는 자제")
+                databaseReference.child("chat").child(i.title!!).push().setValue(chat1)
+                databaseReference.child("chat").child(i.title!!).push().setValue(chat2)
+                databaseReference.child("chat").child(i.title!!).push().setValue(chat3)
+                databaseReference.child("user").child(i.loginuid!!).child("chatingroom").push().setValue(i.title!!)
+                databaseReference.child("user").child(i.enrolleruid!!).child("chatingroom").push().setValue(i.title!!)
+                databaseReference.child("info").child(i.title!!).setValue(null)
 
             }
         }

@@ -25,50 +25,57 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="제목"
+            android:backgroundTint = "#DBDBDB"
             android:layout_margin="5dp"
             />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            >
+            android:layout_height="55dp"
+            android:orientation="horizontal">
 
             <EditText
-                android:layout_margin="5dp"
                 android:id="@+id/start_cost_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="#DBDBDB"
                 android:ems="10"
-                android:hint="시작금(원)"
-                android:inputType="number"
-                android:layout_weight="1" />
+                android:hint="￦ 시작 금액"
+                android:inputType="number" />
 
             <EditText
-                android:layout_margin="5dp"
                 android:id="@+id/jump_cost_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="#DBDBDB"
                 android:ems="10"
-                android:hint="상승금액(원)"
-                android:inputType="number"
-                android:layout_weight="1" />
+                android:hint="￦ 상승 금액"
+                android:inputType="number" />
         </LinearLayout>
 
         <Spinner
-            android:layout_margin="5dp"
             android:id="@+id/categorys_spinner"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            />
+            android:layout_height="45dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+            android:theme="@style/ThemeSpinner"/>
 
         <Spinner
 
-            android:layout_margin="5dp"
             android:id="@+id/period_spinner"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            />
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+            android:theme="@style/ThemeSpinner" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -77,10 +84,11 @@
                 android:id="@+id/detailinfo_edit"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:backgroundTint = "#DBDBDB"
                 android:ems="10"
                 android:gravity="left"
                 android:layout_above="@id/send_info_btn"
-                android:hint="물건에 대한 상세한 정보를 입력해주세요!\n상세할수록 다른 사람의 구매의욕이 올라갈 꺼에요!!" />
+                android:hint="물건에 대한 상세한 정보를 입력해주세요.\n상세할수록 다른 사람의 구매 의욕이 올라갈거에요!!" />
 
             <Button
                 android:id="@+id/send_info_btn"

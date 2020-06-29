@@ -110,7 +110,7 @@
             android:paddingLeft="18dp"
             android:paddingTop="14dp"
             android:text="경매 시작까지 11시간 22분 33초"
-            android:textColor="#FF5252"
+            android:textColor="@color/colorAccent"
             android:textSize="19sp" />
 
         <Button

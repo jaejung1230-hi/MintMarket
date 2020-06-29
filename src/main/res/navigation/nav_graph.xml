@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_itemlistFragment_to_listDetailFragment"
             app:destination="@id/listDetailFragment" />
+        <action
+            android:id="@+id/action_itemlistFragment_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/addFragment"
@@ -51,4 +54,9 @@
         android:name="com.example.testapp.chatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.testapp.ui.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category" />
 </navigation>
