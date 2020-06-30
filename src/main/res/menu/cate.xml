@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
     <item
-        android:id="@+id/cate_bar"
-        android:icon="@drawable/ic_category"
-        android:title="@string/my_item_title"
-        android:iconTint="@color/colorPrimaryDark"
-        app:showAsAction="ifRoom"
-        />
+        android:id="@+id/cate_item1"
+        android:title="전체보기"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/cate_item2"
+        android:title="생활/가전"
+        app:showAsAction="never"/>
+
+
+    <item
+        android:id="@+id/cate_item3"
+        android:title="가구/인테리어"
+        app:showAsAction="never"/>
+
+
+    <item
+        android:id="@+id/cate_item4"
+        android:title="의류"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/cate_item5"
+        android:title="게임/취미"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/cate_item6"
+        android:title="유아/완구"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/cate_item7"
+        android:title="티켓/음반"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/cate_item8"
+        android:title="기타"
+        app:showAsAction="never"/>
+
+
 </menu>
+
+
+

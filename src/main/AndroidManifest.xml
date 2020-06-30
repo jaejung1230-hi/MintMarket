@@ -31,7 +31,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".chatting.ChatActivity" />
+        <activity android:name=".chatting.ChatActivity"
+            android:label="채팅방"/>
         <activity android:name=".activity.Main2Activity" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>
