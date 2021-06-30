@@ -23,10 +23,6 @@ class ChatAdapter (val messages: ArrayList<ChatDTO>): RecyclerView.Adapter<ChatA
     }
 
     inner class ViewHolder(val item: View):RecyclerView.ViewHolder(item){
-        fun add(chatDTO : ChatDTO){
-            item.user_name.text = chatDTO.userName
-            item.message_contents.text = chatDTO.messageContent
-        }
         fun bindMessage(message: ChatDTO){
             item.user_name.text = message.userName
             item.message_contents.text = message.messageContent

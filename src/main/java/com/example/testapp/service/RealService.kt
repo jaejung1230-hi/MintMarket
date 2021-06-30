@@ -11,8 +11,8 @@ import android.os.Handler
 import android.os.IBinder
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import com.example.testapp.activity.Main2Activity
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,16 +36,18 @@ class RealService : Service(){
         serviceIntent = intent
         showToast(application, "Start Service")
         mainThread = Thread(Runnable {
-            val sdf = SimpleDateFormat("aa hh:mm")
             var run = true
             while (run) {
+                var tz: TimeZone
+                val date = Date()
+                val df: DateFormat = SimpleDateFormat("yyyy-MM-dd/HH:mm:ss")
+                tz = TimeZone.getTimeZone("Asia/Seoul")
+                df.setTimeZone(tz)
                 try {
-                    Thread.sleep(1000*5.toLong()) // 1 minute
-                    val date = Date()
                     val id =  mpreference.getString("save_loginuser","없음")
-                    showToast(getApplication(),id)
-                    sendNotification(sdf.format(date))
+                    sendNotification(df.format(date))
                     MyitemCheck(id).check()
+                    Thread.sleep(1000*5.toLong()) // 1 minute
                 } catch (e: InterruptedException) {
                     run = false
                     e.printStackTrace()
@@ -89,7 +91,7 @@ class RealService : Service(){
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun sendNotification(messageBody: String) {
+    private fun sendNotification(format: String) {
         val intent = Intent(this, Main2Activity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
@@ -104,7 +106,7 @@ class RealService : Service(){
         val notificationBuilder: Notification.Builder = Notification.Builder(this, channelId)
             .setSmallIcon(R.mipmap.sym_def_app_icon) //drawable.splash)
             .setContentTitle("Service test")
-            .setContentText(messageBody)
+            .setContentText(format)
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
             .setPriority(Notification.PRIORITY_HIGH)

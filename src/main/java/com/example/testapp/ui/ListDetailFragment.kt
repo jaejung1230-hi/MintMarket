@@ -7,19 +7,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.testapp.activity.Main2Activity
 import com.example.testapp.R
 import com.example.testapp.dataclass.MyParticipateItemList
-import com.example.testapp.dataclass.detailDataList
 import com.example.testapp.dataclass.participantsCheck
+import com.example.testapp.util.LiveDataTimerViewModel
+import com.example.testapp.util.calculateTime
 import com.example.testapp.util.moneyFormatToWon
 import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_list_detail.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class ListDetailFragment : Fragment() {
+    val liveDataTimerViewModel by lazy {
+        ViewModelProvider(this).get(LiveDataTimerViewModel::class.java)
+    }
     var participantsdatas = ArrayList<participantsCheck>()
     val loginuser = Main2Activity.loginuser.uid
     private var firebasedb : FirebaseDatabase? = null
@@ -67,6 +78,21 @@ class ListDetailFragment : Fragment() {
             detail_name_tv.text = "제품명 : " + myInt?.getValue("title").toString()
             category_tv.text = myInt?.getValue("category").toString()
             up_price_tv.text = upPrice
+
+            val elapsedTimerObserver = Observer<Date>{ time->
+                val df: DateFormat = SimpleDateFormat("yyyy-MM-dd/HH:mm:ss")
+                val limit = myInt?.getValue("period")
+                val limitTime = df.parse(limit)
+                Log.d("check","lun ${limitTime}")
+                val leftTime = limitTime.time - time.time
+                val timeArray = calculateTime(leftTime/1000)
+                timeArray?.let {
+                    start_time_tv.text = "경매종료까지 ${timeArray[0]}일 ${timeArray[1]}시 ${timeArray[2]}분 ${timeArray[3]}초"
+                }
+
+            }
+
+            liveDataTimerViewModel?.getNowTime()?.observe(viewLifecycleOwner,elapsedTimerObserver)
         }
 
         getEnrollersItemInfo()

@@ -112,15 +112,12 @@ class ItemlistFragment : Fragment() {
                     val upprice = itemData.child("upprice").getValue(String::class.java)
 
                     datas.add(
-                        ShowFirebaseDataOnList(
-                            imgRes!!, title!!,
-                            price!!,
-                            upprice!!,
-                            period!!,
+                        ShowFirebaseDataOnList(imgRes!!, title!!,
+                            price!!, upprice!!, period!!,
                             loginuid!!, maxPrice!!, detailInfo!!, category!!
                         )
                     )
-                    item_list_rv.adapter = ItemAdapter(datas)
+                    item_list_rv?.adapter = ItemAdapter(datas)
                 }
             }
 

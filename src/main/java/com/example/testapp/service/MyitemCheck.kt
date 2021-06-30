@@ -54,24 +54,34 @@ class MyitemCheck(val id:String?) {
         tz = TimeZone.getTimeZone("Asia/Seoul")
         df.setTimeZone(tz)
 
-        df.format(date)
-
+        Log.d("check","${df.parse(df.format(date))}")
         for(i in datas){
             val closeTime =df.parse(i.period)
             val now = df.parse(df.format(date))
             if(now.compareTo(closeTime) >= 0){
-                Log.d("check","${i.title}은 종료되어야한다!")
                 databaseReference = FirebaseDatabase.getInstance().reference
                 databaseReference.child("info").child(i.title!!).setValue(null)
-                val chat1 : ChatDTO = ChatDTO("관리자", "${i.title}로부터 생성")
-                val chat2 : ChatDTO = ChatDTO("관리자", "${i.maxPrice}로 최종낙찰")
-                val chat3 : ChatDTO = ChatDTO("관리자", "일방적 계약파기는 자제")
-                databaseReference.child("chat").child(i.title!!).push().setValue(chat1)
-                databaseReference.child("chat").child(i.title!!).push().setValue(chat2)
-                databaseReference.child("chat").child(i.title!!).push().setValue(chat3)
-                databaseReference.child("user").child(i.loginuid!!).child("chatingroom").push().setValue(i.title!!)
-                databaseReference.child("user").child(i.enrolleruid!!).child("chatingroom").push().setValue(i.title!!)
-                databaseReference.child("info").child(i.title!!).setValue(null)
+               if(i.loginuid!! != i.enrolleruid!!){
+                   Log.d("check","${i.title}은 종료되어야한다!")
+                   val chat1 : ChatDTO = ChatDTO("관리자", "${i.title}로부터 생성")
+                   val chat2 : ChatDTO = ChatDTO("관리자", "${i.maxPrice}로 최종낙찰")
+                   val chat3 : ChatDTO = ChatDTO("관리자", "일방적 계약파기는 자제")
+                   databaseReference.child("chat").child(i.title!!).push().setValue(chat1)
+                   databaseReference.child("chat").child(i.title!!).push().setValue(chat2)
+                   databaseReference.child("chat").child(i.title!!).push().setValue(chat3)
+                   databaseReference.child("user").child(i.loginuid!!).child("chatingroom").child(i.title!!).setValue(i.title!!)
+                   databaseReference.child("user").child(i.enrolleruid!!).child("chatingroom").child(i.title!!).setValue(i.title!!)
+                   databaseReference.child("info").child(i.title!!).setValue(null)
+
+               } else{
+                   val chat1 : ChatDTO = ChatDTO("관리자", "${i.title}로부터 생성")
+                   val chat2 : ChatDTO = ChatDTO("관리자", "${i.title}는 판매되지 않았습니다..")
+                   databaseReference.child("chat").child(i.title!!).push().setValue(chat1)
+                   databaseReference.child("chat").child(i.title!!).push().setValue(chat2)
+                   databaseReference.child("user").child(i.loginuid!!).child("chatingroom").child(i.title!!).setValue(i.title!!)
+                   databaseReference.child("info").child(i.title!!).setValue(null)
+
+               }
 
             }
         }

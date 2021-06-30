@@ -1,7 +1,6 @@
 package com.example.testapp.dataclass
 
 enum class Category(val category: String){
-    All("기본"),
     Living("생활/가전"),
     Furniture("가구/인테리어"),
     Clothes("의류"),

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.subway.util.hideKeyboard
 import com.example.testapp.R
 import com.example.testapp.activity.Main2Activity
 import com.google.firebase.database.*
@@ -60,6 +61,7 @@ class ChatActivity : AppCompatActivity() {
                 ChatDTO(Main2Activity.loginuser.displayName!!, message)
             chatRef.push().setValue(chat)
             message_edit.setText("")
+            hideKeyboard()
         }
     }
 }
